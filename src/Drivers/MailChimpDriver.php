@@ -184,6 +184,7 @@ class MailChimpDriver implements Driver
     public function removeTags(array $tags, string $email, string $listName = ''): bool 
     {
         $list = $this->lists->findByName($listName);
+        dd($list);
         if (! $this->lastActionSucceeded()) {
             return false;
         }
