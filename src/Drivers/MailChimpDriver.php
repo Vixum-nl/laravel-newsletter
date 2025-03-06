@@ -175,4 +175,24 @@ class MailChimpDriver implements Driver
     {
         return $this->mailChimp->subscriberHash($email);
     }
+
+    public function addTags(array $tags, string $email): bool
+    {
+        return $this->lastActionSucceeded();
+    }
+
+    public function removeTags(array $tags, string $email, string $listName = ''): bool 
+    {
+        $list = $this->lists->findByName($listName);
+        if (! $this->lastActionSucceeded()) {
+            return false;
+        }
+        $subscriberHash = $this->getSubscriberHash($email);
+        if (! $this->lastActionSucceeded()) {
+            return false;
+        }
+        $tags = $this->mailChimp->get("lists/{$list->getId()}/members/{$subscriberHash}/tags");
+        dd($tags);
+        return $this->lastActionSucceeded(); 
+    }
 }

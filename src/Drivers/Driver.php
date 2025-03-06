@@ -33,4 +33,8 @@ interface Driver
     public function hasMember(string $email, string $listName = ''): bool;
 
     public function isSubscribed(string $email, string $listName = ''): bool;
+
+    public function addTags(array $tags, string $email): bool;
+
+    public function removeTags(array $tags, string $email): bool;
 }

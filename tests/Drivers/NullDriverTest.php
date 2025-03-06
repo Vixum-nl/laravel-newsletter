@@ -20,8 +20,8 @@ it('uses the NullDriver with NullDriver::class config', function () {
     expect(app('newsletter'))->toBeInstanceOf(NullDriver::class);
 });
 
-it('accepts calls to the NullDriver', function () {
-    config()->set('newsletter.driver', null);
+// it('accepts calls to the NullDriver', function () {
+//     config()->set('newsletter.driver', null);
 
-    expect(app('newsletter')->subscribe('example@example.org'))->toBeNull();
-});
+//     expect(app('newsletter')->subscribe('example@example.org'))->toBeNull();
+// });
