@@ -176,24 +176,27 @@ class MailChimpDriver implements Driver
         return $this->mailChimp->subscriberHash($email);
     }
 
-    public function addTags(array $tags, string $email): bool
+    public function addTags(array $tags, string $email, string $listName = ''): bool
     {
-        return $this->lastActionSucceeded();
+        $list = $this->lists->findByName($listName);
+        $subscriberHash = $this->getSubscriberHash($email);
+        $tagList = [];
+        foreach($tags as $tag) {
+            $tagList[] = ['name' => $tag, 'status' => 'active'];
+        }
+        return $this->mailChimp->post("lists/{$list->getId()}/members/{$subscriberHash}/tags",['tags' => $tagList]);
     }
 
     public function removeTags(array $tags, string $email, string $listName = ''): bool 
     {
         $list = $this->lists->findByName($listName);
-        dd($list);
-        if (! $this->lastActionSucceeded()) {
-            return false;
-        }
         $subscriberHash = $this->getSubscriberHash($email);
-        if (! $this->lastActionSucceeded()) {
-            return false;
+        $currentTags = $this->mailChimp->get("lists/{$list->getId()}/members/{$subscriberHash}/tags");
+        $newTagList = [];
+        foreach($currentTags['tags'] as $currentTag) {
+            $newTagList[] = ['name' => $currentTag['name'], 'status' => (!in_array($currentTag['name'], $tags) ? 'active' : 'inactive')];
         }
-        $tags = $this->mailChimp->get("lists/{$list->getId()}/members/{$subscriberHash}/tags");
-        dd($tags);
-        return $this->lastActionSucceeded(); 
+        return $this->mailChimp->post("lists/{$list->getId()}/members/{$subscriberHash}/tags",['tags' => $newTagList]);
     }
+
 }
