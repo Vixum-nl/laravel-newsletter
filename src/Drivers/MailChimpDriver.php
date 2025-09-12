@@ -187,14 +187,16 @@ class MailChimpDriver implements Driver
         return $this->mailChimp->post("lists/{$list->getId()}/members/{$subscriberHash}/tags",['tags' => $tagList]);
     }
 
-    public function removeTags(array $tags, string $email, string $listName = ''): bool 
+    public function removeTags(array $tags, string $email, string $listName = ''): bool
     {
         $list = $this->lists->findByName($listName);
         $subscriberHash = $this->getSubscriberHash($email);
         $currentTags = $this->mailChimp->get("lists/{$list->getId()}/members/{$subscriberHash}/tags");
         $newTagList = [];
-        foreach($currentTags['tags'] as $currentTag) {
-            $newTagList[] = ['name' => $currentTag['name'], 'status' => (!in_array($currentTag['name'], $tags) ? 'active' : 'inactive')];
+        if (isset($currentTags['tags'])) {
+            foreach ($currentTags['tags'] as $currentTag) {
+                $newTagList[] = ['name' => $currentTag['name'], 'status' => (!in_array($currentTag['name'], $tags) ? 'active' : 'inactive')];
+            }
         }
         return $this->mailChimp->post("lists/{$list->getId()}/members/{$subscriberHash}/tags",['tags' => $newTagList]);
     }
