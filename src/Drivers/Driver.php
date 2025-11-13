@@ -34,7 +34,7 @@ interface Driver
 
     public function isSubscribed(string $email, string $listName = ''): bool;
 
-    public function addTags(array $tags, string $email): bool;
+    public function addTags(array $tags, string $email): bool|array;
 
     public function removeTags(array $tags, string $email): bool;
 }

@@ -176,7 +176,7 @@ class MailChimpDriver implements Driver
         return $this->mailChimp->subscriberHash($email);
     }
 
-    public function addTags(array $tags, string $email, string $listName = ''): bool
+    public function addTags(array $tags, string $email, string $listName = ''): bool|array
     {
         $list = $this->lists->findByName($listName);
         $subscriberHash = $this->getSubscriberHash($email);
